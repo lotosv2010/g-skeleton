@@ -1,32 +1,37 @@
+import Server from './Server'
+
 interface IOptions {
-  routes: string[];
-  skeletonMap: Record<string, string>;
+  staticDir: string,
+  port: number,
+  origin: string
 }
 
 interface ICtx {
   path: string
   filename: string
-  server?: unknown
-  bundle?: unknown
-  chunk?: unknown
+  server?: any
+  bundle?: any
+  chunk?: any
+  originalUrl?: string
 }
 
+// 创建插件
 export default function reactSkeletonPlugin(options: IOptions) {
-  const { routes = [], skeletonMap = {} } = options;
+  const { staticDir, port, origin } = options;
 
   return {
     name: 'vite-plugin-react-skeleton',
-    transformIndexHtml(html: string, { path }: ICtx) {
-      const matchedRoute = routes.find(route => path.startsWith(route));
-      if (matchedRoute && skeletonMap[matchedRoute]) {
-        const skeletonHTML = skeletonMap[matchedRoute];
-        // 简单注入骨架屏到 #root 占位符中
-        return html.replace(
-          /<div id="root"><\/div>/,
-          `<div id="root">${skeletonHTML}</div>`
-        );
-      }
-      return html;
+    transformIndexHtml(html: string, ctx: ICtx) {
+      const modifiedHtml = html;
+      // 启动服务器
+      const server = new Server(options)
+      server.listen()
+      console.log(html, ctx.originalUrl, staticDir, port, origin)
+      // 生成骨架屏
+      // TODO
+      // 关闭服务器
+      server.close()
+      return modifiedHtml;
     }
   }
 }

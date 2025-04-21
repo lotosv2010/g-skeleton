@@ -1,5 +1,5 @@
 import { Outlet, NavLink } from 'react-router'
-import './layout.scss'
+import './index.scss'
 
 function Layout () {
   return (

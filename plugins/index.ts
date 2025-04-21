@@ -1,0 +1,1 @@
+export { default as ReactSkeletonPlugin } from './vite-plugin-react-skeleton'
