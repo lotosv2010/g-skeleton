@@ -10,7 +10,12 @@ export default defineConfig({
     ReactSkeletonPlugin({
       staticDir: resolve(__dirname, 'dist'),
       port:6060,
-      origin:'http://localhost:6060'
+      origin:'http://localhost:6060',
+      viewport: {
+        width: 640,
+        height: 480,
+        deviceScaleFactor: 1
+      }
     }),
   ],
 })
