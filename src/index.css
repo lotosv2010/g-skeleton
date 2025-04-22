@@ -1,3 +1,9 @@
 body {
   margin: 0;
 }
+.btns {
+  display: flex;
+  justify-content: space-around;
+  align-items: center;
+  height: 60px;
+}

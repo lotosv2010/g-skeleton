@@ -15,7 +15,10 @@ export default defineConfig({
         width: 640,
         height: 480,
         deviceScaleFactor: 1
-      }
+      },
+      button: {
+        color: '#999999'
+      },
     }),
   ],
 })

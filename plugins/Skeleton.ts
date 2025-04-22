@@ -19,7 +19,7 @@ class Skeleton {
 
   async initialize() {
     this.browser = await puppeteer.launch({
-      headless: true,
+      headless: false,
     });
   }
   async newPage() {

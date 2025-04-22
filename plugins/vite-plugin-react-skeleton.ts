@@ -11,7 +11,8 @@ interface IOptions {
     width: number,
     height: number,
     deviceScaleFactor: number
-  }
+  },
+  button?: any
 }
 
 // 创建插件
