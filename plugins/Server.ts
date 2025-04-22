@@ -13,13 +13,13 @@ class Server {
     staticDir: './dist',
     origin: 'http://localhost:8090'
   }
-  private app: any = null
+  // private app: any = null
   private listenServer: any = null
   constructor(options: IOptions) {
     this.options = options
   }
   listen() {
-    const app = this.app = express()
+    const app = express()
     app.use(express.static(this.options.staticDir))
     this.listenServer = http.createServer(app)
     return new Promise((resolve, reject) => {

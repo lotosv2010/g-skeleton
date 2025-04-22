@@ -1,5 +1,7 @@
+import { resolve } from 'path'
 import Server from './Server'
 import Skeleton from './Skeleton'
+import { readFileSync, writeFileSync } from 'fs'
 
 interface IOptions {
   staticDir: string,
@@ -12,38 +14,35 @@ interface IOptions {
   }
 }
 
-interface ICtx {
-  path: string
-  filename: string
-  server?: any
-  bundle?: any
-  chunk?: any
-  originalUrl?: string
-}
-
 // 创建插件
-export default function reactSkeletonPlugin(options: IOptions) {
-  const { staticDir, port, origin, viewport } = options;
+export default function reactSkeletonPlugin(options: IOptions): any {
+  const { staticDir, origin, viewport } = options;
 
   return {
     name: 'vite-plugin-react-skeleton',
-    async transformIndexHtml(html: string, ctx: ICtx) {
-      const modifiedHtml = html;
-      // 启动服务器
-      const server = new Server(options)
-      server.listen()
-      console.log(html, ctx.originalUrl, staticDir, port, origin)
-      // 生成骨架屏
-      const skeleton= new Skeleton({
-        viewport
-      });
-      await skeleton.initialize();
-      const skeletonHtml = await skeleton.genHtml(origin);
-      console.log('skeletonHtml',skeletonHtml);
-      await skeleton.destroy();
-      // 关闭服务器
-      server.close()
-      return modifiedHtml;
-    }
+    writeBundle: {
+      sequential: true,
+			order: 'post',
+      async handler (html: string) {
+        const modifiedHtml = html;
+        // 启动服务器
+        const server = new Server(options)
+        server.listen()
+        // 生成骨架屏
+        const skeleton= new Skeleton({
+          viewport
+        });
+        await skeleton.initialize();
+        const skeletonHtml = await skeleton.genHtml(origin);
+        const originPath = resolve(staticDir, 'index.html');
+        const originHtml = await readFileSync(originPath, 'utf-8');
+        const finalHtml = originHtml.replace('<!-- G_SKELETON -->', skeletonHtml);
+        await writeFileSync(originPath, finalHtml, 'utf-8');
+        await skeleton.destroy();
+        // 关闭服务器
+        server.close()
+        return modifiedHtml;
+      }
+    },
   }
 }
